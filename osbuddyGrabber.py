@@ -19,24 +19,27 @@ def processItem(id, itemName):
             return response.read()
 
     print('Opening URL')
-    dataLength = 0
-    data = 0
-    retry = 0
-    while dataLength < 1000:
-        if retry > 0:
-            print('Too little entries returned, retry %s' % retry)
-            time.sleep(5)
-        if retry > 50:
-            print('Failed too many times, going with the data we have')
-            break
-        res = response(url2)
-        data = json.loads(res)
-        dataLength = len(data)
-        retry += 1
-    print('Number of entries: ' + str(dataLength))
-    filename = 'data/' + str(id) + ' - ' + itemName + '.json'
-    with open(filename, 'w') as outfile:
-        json.dump(data, outfile)
+    try:
+        dataLength = 0
+        data = 0
+        retry = 0
+        while dataLength < 1000:
+            if retry > 0:
+                print('Too little entries returned, retry %s' % retry)
+                time.sleep(5)
+            if retry > 50:
+                print('Failed too many times, going with the data we have')
+                break
+            res = response(url2)
+            data = json.loads(res)
+            dataLength = len(data)
+            retry += 1
+        print('Number of entries: ' + str(dataLength))
+        filename = 'data/' + str(id) + ' - ' + itemName + '.json'
+        with open(filename, 'w') as outfile:
+            json.dump(data, outfile)
+    except:
+        processItem(id, itemName)
 
 
 def getNames():
@@ -83,7 +86,7 @@ def getData():
         finally:
             print("Finished Processing " + itemName)
             b += 1
-            time.sleep(5)
+            #time.sleep(5)
 
 
 def getData2():
@@ -106,7 +109,7 @@ def getData2():
         finally:
             print("Finished Processing " + itemName)
             b += 1
-            time.sleep(5)
+            #time.sleep(5)
 
 def manualRun():
     getNames()
