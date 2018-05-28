@@ -61,7 +61,9 @@ def getNames():
             storeList[int(p)] = data[p]["sp"]
             a += 1
     except:
-        print("Error occurred")
+        print("Error occurred when getting item list, trying again in 5 seconds")
+        time.sleep(5)
+        getNames()
 
 
 def getData():
@@ -73,8 +75,8 @@ def getData():
         print('Processing ' + itemName)
         try:
             processItem(i, itemName)
-        except urllib.error.HTTPError:
-            print('Error occurred, attempting again in 5 seconds')
+        except:
+            print('Error occurred processing, attempting again in 5 seconds')
             time.sleep(5)
             processItem(i, itemName)
             pass
@@ -83,6 +85,28 @@ def getData():
             b += 1
             time.sleep(5)
 
+
+def getData2():
+    getNames()
+    b = 0
+    startPoint = input("Enter the Item ID you would like to start from: ")
+    print('Item list obtained, beginning to scrape data for items')
+    for i in sorted(idList):
+        if i < int(startPoint):
+            continue
+        itemName = nameList[i]
+        print('Processing ' + itemName)
+        try:
+            processItem(i, itemName)
+        except:
+            print('Error occurred processing, attempting again in 5 seconds')
+            time.sleep(5)
+            processItem(i, itemName)
+            pass
+        finally:
+            print("Finished Processing " + itemName)
+            b += 1
+            time.sleep(5)
 
 def manualRun():
     getNames()
@@ -107,6 +131,7 @@ def manualRun():
 def menu():
     print("1. Automatic Gather")
     print("2. Manual")
+    print("3. Automatic from start point")
     program = input("Enter Program: ")
     if program == '1':
         print('Starting to gather data...')
@@ -114,6 +139,8 @@ def menu():
         getData()
     elif program == '2':
         manualRun()
+    elif program == '3':
+        getData2()
     else:
         print("Invalid Option")
         menu()
