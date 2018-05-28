@@ -11,35 +11,40 @@ idList = {}
 storeList = {}
 
 
-def processItem(id, itemName):
-    url2 = "https://api.rsbuddy.com/grandExchange?a=graph&g=30&start=1424870382000&i=%s" % id
-
-    def response(itemUrl):
-        with urllib.request.urlopen(itemUrl) as response:
+def openURL(url):
+    def response(itemURL):
+        with urllib.request.urlopen(itemURL) as response:
             return response.read()
+    return response(url)
 
-    print('Opening URL')
-    try:
-        dataLength = 0
-        data = 0
-        retry = 0
-        while dataLength < 1000:
-            if retry > 0:
-                print('Too little entries returned, retry %s' % retry)
-                time.sleep(5)
-            if retry > 50:
-                print('Failed too many times, going with the data we have')
-                break
-            res = response(url2)
-            data = json.loads(res)
-            dataLength = len(data)
-            retry += 1
-        print('Number of entries: ' + str(dataLength))
-        filename = 'data/' + str(id) + ' - ' + itemName + '.json'
-        with open(filename, 'w') as outfile:
-            json.dump(data, outfile)
-    except:
-        processItem(id, itemName)
+
+def processItem(id, itemName):
+    url = "https://api.rsbuddy.com/grandExchange?a=graph&g=30&start=1424870382000&i=%s" % id
+    print("Attempting to open URL")
+    dataLength = 0
+    data = 0
+    retry = 0
+    res = 0
+    while dataLength < 1000:
+        if retry > 0:
+            print(' - Too little entries returned, retry %s' % retry)
+            time.sleep(5)
+        if retry > 50:
+            print(' - Failed too many times, going with the data we have')
+            break
+        try:
+            res = openURL(url)
+        except:
+            res = openURL(url)
+        print("Opened URL", end='', flush=True)
+        data = json.loads(res)
+        print(", Loaded data", end='', flush=True)
+        dataLength = len(data)
+        retry += 1
+    print(', Number of entries: ' + str(dataLength))
+    filename = 'data/' + str(id) + ' - ' + itemName + '.json'
+    with open(filename, 'w') as outfile:
+        json.dump(data, outfile)
 
 
 def getNames():
@@ -76,17 +81,9 @@ def getData():
     for i in sorted(idList):
         itemName = nameList[i]
         print('Processing ' + itemName)
-        try:
-            processItem(i, itemName)
-        except:
-            print('Error occurred processing, attempting again in 5 seconds')
-            time.sleep(5)
-            processItem(i, itemName)
-            pass
-        finally:
-            print("Finished Processing " + itemName)
-            b += 1
-            #time.sleep(5)
+        processItem(i, itemName)
+        print("Finished Processing " + itemName)
+        b += 1
 
 
 def getData2():
@@ -138,7 +135,7 @@ def menu():
     program = input("Enter Program: ")
     if program == '1':
         print('Starting to gather data...')
-        time.sleep(1)
+        #time.sleep(1)
         getData()
     elif program == '2':
         manualRun()
