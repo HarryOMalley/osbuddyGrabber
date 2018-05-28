@@ -34,7 +34,7 @@ def processItem(id, itemName):
         dataLength = len(data)
         retry += 1
     print('Number of entries: ' + str(dataLength))
-    filename = str(id) + ' - ' + itemName + '.json'
+    filename = 'data/' + str(id) + ' - ' + itemName + '.json'
     with open(filename, 'w') as outfile:
         json.dump(data, outfile)
 
