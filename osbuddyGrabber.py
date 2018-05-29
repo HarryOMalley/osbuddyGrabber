@@ -95,7 +95,7 @@ def getData2():
         if i < int(startPoint):
             continue
         itemName = nameList[i]
-        print('Processing ' + itemName)
+        print('Processing ' + itemName + ' - ' + i)
         try:
             processItem(i, itemName)
         except:
