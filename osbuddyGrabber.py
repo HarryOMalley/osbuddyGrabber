@@ -25,7 +25,7 @@ def processItem(id, itemName):
     data = 0
     retry = 0
     res = 0
-    while dataLength < 100:
+    while dataLength < 20:
         if retry > 0:
             print(' - Too little entries returned, retry %s' % retry)
             time.sleep(1)
