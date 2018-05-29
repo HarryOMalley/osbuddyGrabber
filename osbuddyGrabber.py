@@ -28,8 +28,8 @@ def processItem(id, itemName):
     while dataLength < 100:
         if retry > 0:
             print(' - Too little entries returned, retry %s' % retry)
-            time.sleep(5)
-        if retry > 50:
+            time.sleep(1)
+        if retry > 20:
             print(' - Failed too many times, going with the data we have')
             break
         try:
